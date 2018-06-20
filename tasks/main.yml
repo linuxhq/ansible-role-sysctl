@@ -1,7 +1,7 @@
 ---
 - name: Attempting to execute os specific tasks (Debian)
   tags: sysctl
-  include_tasks: "sysctl{{ ansible_os_family|lower }}.yml"
+  include_tasks: "sysctl_{{ ansible_os_family|lower }}.yml"
   when: ansible_os_family == 'Debian'
 
 - name: Attempting to execute os specific tasks (RedHat)

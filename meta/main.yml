@@ -4,14 +4,15 @@ galaxy_info:
   author: tkimball83
   description: RHEL/CentOS - Configure kernel parameters at runtime
   license: GPLv3
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
+    - name: Debian
+      versions:
+        - all
     - name: EL
       versions:
         - 6
         - 7
   galaxy_tags:
-    - kernel
     - sysctl
-    - system
 ...

@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+# sysctl_d: {{ item.settings|length }}
+
+{% for key, value in item.settings.iteritems()|sort %}
+{%   if value is string %}
+{{ key }} = {{ value|string }}
+{%   elif value is number %}
+{{ key }} = {{ value|int }}
+{%   else %}
+{{ key }} = {{ value }}
+{%  endif %}
+{% endfor -%} 

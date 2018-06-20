@@ -1,15 +1,51 @@
 ---
-- name: Executing OS specific tasks (Debian)
+- name: Attempting to execute os specific tasks (Debian)
   tags: sysctl
-  include_tasks: "{{ ansible_os_family|lower }}.yml"
+  include_tasks: "sysctl{{ ansible_os_family|lower }}.yml"
   when: ansible_os_family == 'Debian'
 
-- name: Executing OS specific tasks (RedHat)
+- name: Attempting to execute os specific tasks (RedHat)
   tags: sysctl
-  include_tasks: "{{ ansible_os_family|lower }}.yml"
+  include_tasks: "sysctl_{{ ansible_os_family|lower }}.yml"
   when: ansible_os_family == 'RedHat'
 
-- name: Executing configuration tasks
+- name: Attempting to overlay sysctl.conf configurations
   tags: sysctl
-  import_tasks: configure.yml
+  become: true
+  template:
+    src: sysctl.conf.j2
+    dest: /etc/sysctl.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload sysctl
+  when: sysctl_package is success
+
+- name: Attempting to overlay /etc/sysctl.d directory
+  tags: sysctl
+  become: true
+  file:
+    mode: 0755
+    path: /etc/sysctl.d
+    state: directory
+  when:
+    - sysctl_d|length > 0
+    - sysctl_package is success
+
+- name: Attempting to overlay sysctl.d configurations
+  tags: sysctl
+  become: true
+  template:
+    src: sysctl_d.j2
+    dest: "/etc/sysctl.d/{{ item.order }}-{{ item.file }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload sysctl
+  with_items: "{{ sysctl_d }}"
+  when:
+    - item.file is defined
+    - item.order is defined
+    - item.settings|length > 0
+    - sysctl_package is success
 ...

@@ -1,0 +1,7 @@
+---
+- name: reload sysctl
+  tags: sysctl
+  become: true
+  command: |
+    sysctl --system
+...

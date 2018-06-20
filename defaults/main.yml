@@ -1,4 +1,4 @@
 ---
-sysctl_conf: []
+sysctl_conf: {}
 sysctl_d: []
 ...

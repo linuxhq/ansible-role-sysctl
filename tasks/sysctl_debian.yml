@@ -1,0 +1,9 @@
+---
+- name: Ensure that the procps package is installed
+  tags: sysctl
+  become: true
+  apt:
+    name: procps
+    state: present
+  register: sysctl_package
+...

@@ -4,7 +4,7 @@
 [![Ansible Galaxy](https://img.shields.io/badge/ansible--galaxy-sysctl-blue.svg?style=flat)](https://galaxy.ansible.com/linuxhq/sysctl)
 [![License](https://img.shields.io/badge/license-GPLv3-brightgreen.svg?style=flat)](COPYING)
 
-RHEL/CentOS - Configure kernel parameters at runtime
+Linux - Configure kernel parameters at runtime
 
 ## Requirements
 

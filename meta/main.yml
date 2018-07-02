@@ -1,6 +1,7 @@
 ---
 dependencies: []
 galaxy_info:
+  role_name: sysctl
   author: tkimball83
   description: Linux - Configure kernel parameters at runtime
   license: GPLv3

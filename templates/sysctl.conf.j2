@@ -2,7 +2,7 @@
 # sysctl_conf: {{ sysctl_conf|length }}
 {% if sysctl_conf|length > 0 %}
 
-{%   for key, value in sysctl_conf.iteritems()|sort %}
+{%   for key, value in sysctl_conf.items()|sort %}
 {%     if value is string %}
 {{ key }} = {{ value|string }}
 {%     elif value is number %}

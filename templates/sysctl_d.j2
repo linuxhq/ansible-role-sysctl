@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 # sysctl_d: {{ item.settings|length }}
 
-{% for key, value in item.settings.iteritems()|sort %}
+{% for key, value in item.settings.items()|sort %}
 {%   if value is string %}
 {{ key }} = {{ value|string }}
 {%   elif value is number %}

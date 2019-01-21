@@ -1,13 +1,31 @@
 ---
-- name: Attempting to execute os specific tasks (Debian)
+- name: Ensure that the procps package is installed
   tags: sysctl
-  include_tasks: "sysctl_{{ ansible_os_family|lower }}.yml"
+  become: true
+  apt:
+    name: procps
+    state: present
   when: ansible_os_family == 'Debian'
 
-- name: Attempting to execute os specific tasks (RedHat)
+- name: Ensure that the procps package is installed
   tags: sysctl
-  include_tasks: "sysctl_{{ ansible_os_family|lower }}.yml"
-  when: ansible_os_family == 'RedHat'
+  become: true
+  yum:
+    name: procps
+    state: present
+  when:
+    - ansible_distribution_major_version <= '6'
+    - ansible_os_family == 'RedHat'
+
+- name: Ensure that the procps-ng package is installed
+  tags: sysctl
+  become: true
+  yum:
+    name: procps-ng
+    state: present
+  when:
+    - ansible_distribution_major_version >= '7'
+    - ansible_os_family == 'RedHat'
 
 - name: Attempting to overlay sysctl.conf configurations
   tags: sysctl
@@ -19,7 +37,6 @@
     group: root
     mode: 0644
   notify: reload sysctl
-  when: sysctl_package is success
 
 - name: Attempting to overlay /etc/sysctl.d directory
   tags: sysctl
@@ -28,24 +45,23 @@
     mode: 0755
     path: /etc/sysctl.d
     state: directory
-  when:
-    - sysctl_d|length > 0
-    - sysctl_package is success
+  when: sysctl_d|length > 0
 
 - name: Attempting to overlay sysctl.d configurations
   tags: sysctl
   become: true
   template:
     src: sysctl_d.j2
-    dest: "/etc/sysctl.d/{{ item.order }}-{{ item.file }}.conf"
+    dest: "{{ '/etc/sysctl.d/' + item.order + '-' + item.file + '.conf' }}"
     owner: root
     group: root
     mode: 0644
   notify: reload sysctl
-  with_items: "{{ sysctl_d }}"
+  loop: "{{ sysctl_d }}"
+  loop_control:
+    label: "{{ item.file }}"
   when:
     - item.file is defined
     - item.order is defined
     - item.settings|length > 0
-    - sysctl_package is success
 ...

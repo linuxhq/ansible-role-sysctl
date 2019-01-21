@@ -59,7 +59,7 @@
   notify: reload sysctl
   loop: "{{ sysctl_d }}"
   loop_control:
-    label: "{{ item.file }}"
+    label: "{{ item.order|string + '-' + item.file }}"
   when:
     - item.file is defined
     - item.order is defined

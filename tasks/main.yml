@@ -57,7 +57,7 @@
     group: root
     mode: 0644
   notify: reload sysctl
-  loop: "{{ sysctl_d }}"
+  with_items: "{{ sysctl_d }}"
   loop_control:
     label: "{{ item.order|string + '-' + item.file }}"
   when:
